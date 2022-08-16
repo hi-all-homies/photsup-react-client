@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import PostList from "../components/post-list";
 import Actions from "../components/actions";
 
-const Wall = () => {
+const Wall = ({user}) => {
     const [posts, setPosts] = useState([]);
     const deletePost = (index) => {
         let mutedPosts = posts.filter((p,i) => i !== index);
@@ -19,7 +19,7 @@ const Wall = () => {
 
     return (
         <Container>
-            <Actions/>
+            <Actions user={user}/>
             <PostList posts={posts} delete={deletePost}/>
         </Container>
     );

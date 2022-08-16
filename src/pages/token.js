@@ -1,20 +1,20 @@
 import { Box, CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { AuthService } from "../api/auth-service";
 
-
-const Token = () => {
+const Token = (props) => {
     const navigate = useNavigate();
     const [params] = useSearchParams();
 
     const processToken = () => {
         const token = params.get("jwt");
-        if (token){
-            localStorage.setItem("token", token);
+        if (token && AuthService.storeUser(token)){
+            props.logIn();
             navigate("/");
         }
         else 
-        navigate("/login");
+            navigate("/login");
     }
 
     useEffect(() =>{

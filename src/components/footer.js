@@ -1,13 +1,12 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import '../pages/App.css';
 
 const Footer = () => {
     return (
-        <Box bgcolor="text.secondary" color="white" width="100%" position="fixed" bottom={0} py={0.5}>
-            <Container maxWidth="lg">
-                <Typography textAlign="center">
-                    phots up &reg; {new Date().getFullYear()}
-                </Typography>
-            </Container>
+        <Box className='footer-box' bgcolor="text.secondary">
+            <Typography textAlign="center">
+                phots up &reg; {new Date().getFullYear()}
+            </Typography>
         </Box>
     );
 }
