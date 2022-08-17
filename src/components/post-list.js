@@ -2,11 +2,11 @@ import { Container } from "@mui/material";
 import Post from "./post";
 
 
-const PostList = (props) => {
+const PostList = ({posts}) => {
     return (
         <Container>
-            {props.posts.map((p,i) =>
-                <Post key={p.id} post={p} delete={()=>props.delete(i)}/>
+            {posts.map((post) =>
+                <Post key={post.postId} post={post}/>
             )}
         </Container>
     );
