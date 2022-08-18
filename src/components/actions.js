@@ -5,7 +5,7 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import UserMenu from "./user-menu";
 
 
-const Actions = ({user, open}) => {
+const Actions = ({user, open, openUserDialog}) => {
     return (
         <Toolbar sx={{mt: "1.5rem"}}>
             <Box sx={{flexGrow: 1}}>
@@ -17,7 +17,7 @@ const Actions = ({user, open}) => {
             </Box>
 
             <Box>
-                <UserMenu user={user}/>
+                <UserMenu user={user} openUserDialog={openUserDialog}/>
             </Box>
         </Toolbar>
     );

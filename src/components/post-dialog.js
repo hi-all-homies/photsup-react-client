@@ -1,10 +1,10 @@
 import { PhotoCamera } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
 import { Box } from "@mui/system";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
-const PostDialog = ({open, close, savePost}) => {
+const PostDialog = ({open, close, savePost, updPost, updatePost}) => {
     const [content, setContent] = useState('');
     const [preview, setPreview] = useState(null);
     const imageInput = useRef(null);
@@ -13,6 +13,13 @@ const PostDialog = ({open, close, savePost}) => {
         setContent(event.target.value);
     }
 
+    useEffect(()=>{
+        if (updPost){
+            setContent(updPost.content);
+            setPreview(updPost.imageUrl);
+        }
+    },[updPost])
+
     const handleFileInput = () => {
         let file = imageInput.current.files[0];
         if (!file || file.type.match(/image\/*/) == null)
@@ -20,31 +27,41 @@ const PostDialog = ({open, close, savePost}) => {
 
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        console.log(imageInput.current.files[0]);
         reader.onload = event => setPreview(reader.result);
     }
 
     const handleSubmit = () => {
         savePost(content, imageInput.current.files[0]);
-        setContent('');
-        setPreview(null);
-        close();
+        closeDialog();
     }
 
+    const handleUpdate = () => {
+        updatePost(updPost.postId, content, imageInput.current.files[0], preview);
+       closeDialog();
+    }
+
+    const closeDialog = () => {
+        setContent('');
+        setPreview(null);
+        updPost=null;
+        close();
+    }
+    
     return(
-        <Dialog open={open} onClose={close} fullWidth={true} maxWidth="sm">
-            <DialogTitle>publish new post</DialogTitle>
+        <Dialog open={open} onClose={closeDialog} fullWidth={true} maxWidth="sm">
+            <DialogTitle>{updPost ? 'update post' : 'publish new post'}</DialogTitle>
 
             <DialogContent>
 
                 <Box display="flex">
-                <Box sx={{ maxWidth: "55%", margin: "auto"}}
-                    component="img" src={preview}>
+                <Box sx={{ maxWidth: "55%", margin: "auto"}} component="img"
+                    src={preview}>
                 </Box>
                 </Box>
 
-                <TextField id="content" value={content} onChange={changeContent}
-                fullWidth autoFocus label="message" type="text" variant="standard"/>
+                <TextField id="content" value={content}
+                    onChange={changeContent}
+                    fullWidth autoFocus label="message" type="text" variant="standard"/>
             </DialogContent>
 
             <DialogActions>
@@ -52,10 +69,15 @@ const PostDialog = ({open, close, savePost}) => {
                     <input onChange={handleFileInput} ref={imageInput} hidden type="file" accept="image/**" />
                     <PhotoCamera/>
                 </IconButton>
-
-                <Button onClick={handleSubmit} disabled={content.length < 3 || !preview}>
+                {updPost ? 
+                <Button onClick={handleUpdate} disabled={content.length < 3}>
+                    edit
+                </Button>
+                :
+                <Button onClick={handleSubmit} disabled={imageInput.current ? content.length < 3 || !imageInput.current.files[0] : true}>
                     post
                 </Button>
+                }
             </DialogActions>
         </Dialog>
     );
