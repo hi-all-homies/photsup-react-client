@@ -5,13 +5,13 @@ import { useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-const Post = ({post, user, open, deletePost}) => {
+const Post = ({post, user, openPostDialog, deletePost}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const openMenu = (event) => setAnchorEl(event.currentTarget);
     const menu = Boolean(anchorEl);
 
     const edit = () => {
-        open(post);
+        openPostDialog('update', post);
         setAnchorEl(null);
     }
 

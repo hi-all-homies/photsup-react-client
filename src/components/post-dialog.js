@@ -9,16 +9,16 @@ const PostDialog = ({open, close, savePost, updPost, updatePost}) => {
     const [preview, setPreview] = useState(null);
     const imageInput = useRef(null);
 
-    const changeContent = (event) => {
-        setContent(event.target.value);
-    }
-
     useEffect(()=>{
         if (updPost){
             setContent(updPost.content);
             setPreview(updPost.imageUrl);
         }
     },[updPost])
+
+    const changeContent = (event) => {
+        setContent(event.target.value);
+    }
 
     const handleFileInput = () => {
         let file = imageInput.current.files[0];
@@ -43,7 +43,6 @@ const PostDialog = ({open, close, savePost, updPost, updatePost}) => {
     const closeDialog = () => {
         setContent('');
         setPreview(null);
-        updPost=null;
         close();
     }
     
@@ -59,8 +58,7 @@ const PostDialog = ({open, close, savePost, updPost, updatePost}) => {
                 </Box>
                 </Box>
 
-                <TextField id="content" value={content}
-                    onChange={changeContent}
+                <TextField value={content} onChange={changeContent}
                     fullWidth autoFocus label="message" type="text" variant="standard"/>
             </DialogContent>
 

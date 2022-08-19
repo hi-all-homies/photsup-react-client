@@ -5,9 +5,12 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import UserMenu from "./user-menu";
 
 
-const Actions = ({user, open, openUserDialog}) => {
+const Actions = ({user, openPostDialog, openUserDialog}) => {
+    
+    const open = () => openPostDialog('new');
+
     return (
-        <Toolbar sx={{mt: "1.5rem"}}>
+        <Toolbar sx={{mt: "1rem"}}>
             <Box sx={{flexGrow: 1}}>
                 <ButtonGroup>
                     <Button onClick={open} variant="contained" startIcon={<AddIcon/>}>

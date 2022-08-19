@@ -10,6 +10,20 @@ import UserService from "../api/user-service";
 
 const baseUrl = `${process.env.REACT_APP_BASE_URL}`;
 
+const postDialogState = { postToWatch: null, isOpened: false };
+const postDialogReducer = (dialogState, action) => {
+    switch(action.type){
+        case 'new':
+            return { postToWatch: null, isOpened: true };
+        case 'update':
+            return { postToWatch: action.payload, isOpened: true };
+        case 'close':
+            return postDialogState;
+        default:
+            return dialogState;
+    }
+}
+
 const userDialogInitState = { userToWatch: null, isOpened: false };
 const userDialogReducer = (dialogState, action) => {
     switch(action.type){
@@ -26,16 +40,25 @@ const userDialogReducer = (dialogState, action) => {
 }
 
 const Wall = ({user}) => {
-    const [open, setOpen] = useState(false);
     const [posts, setPosts] = useState([]);
-    const [updPost, setUpdPost] = useState(null);
-
     const [dialogState, dispatch] = useReducer(userDialogReducer, userDialogInitState);
+    const [postDialog, dispatchPostDialog] = useReducer(postDialogReducer, postDialogState);
+
+    useEffect(() => {
+        PostService.findPosts(`${baseUrl}/posts?page=0`)
+            .then(posts => setPosts(posts));
+    },[])
+
 
     const openUserDialog = (uniqueKey) => {
         UserService.getUser(`${baseUrl}/users/${uniqueKey}`)
             .then(u => dispatch({type: 'open', payload: u}));
     };
+
+    const openPostDialog = (type, postToWatch) => {
+        dispatchPostDialog({type: type, payload: postToWatch});
+    }
+
     
     const savePost = (content, image) => {
         PostService.savePost(`${baseUrl}/posts`, content, image)
@@ -44,11 +67,6 @@ const Wall = ({user}) => {
                 let array = [post];
                 setPosts(array.concat(posts));
             });
-    }
-
-    const openUpdate = (post) => {
-        setUpdPost(Object.assign({}, post));
-        setOpen(true);
     }
 
     const updatePost = (postId,content, image, imgUrl) => {
@@ -73,21 +91,19 @@ const Wall = ({user}) => {
             })
     }
 
-
-    useEffect(() => {
-        PostService.findPosts(`${baseUrl}/posts?page=0`)
-            .then(posts => setPosts(posts));
-    },[])
-
     return (
         <Container>
-            <Actions user={user} open={() => {setUpdPost(null); setOpen(true)}}
+            <Actions user={user} openPostDialog={openPostDialog}
                 openUserDialog={openUserDialog} />
-            <PostList posts={posts} user={user} open={openUpdate} deletePost={deletePost} />
-            <PostDialog savePost={savePost} updPost={updPost} updatePost={updatePost}
-                open={open} close={() => setOpen(false)}/>
+
+            <PostList posts={posts} user={user} openPostDialog={openPostDialog}
+                deletePost={deletePost} />
+
+            <PostDialog savePost={savePost} updPost={postDialog.postToWatch} updatePost={updatePost}
+                open={postDialog.isOpened} close={() => dispatchPostDialog({type: 'close'})}/>
             
-            <UserDialog shownUser={dialogState.userToWatch} open={dialogState.isOpened} close={() => dispatch({type: 'close'})}/>
+            <UserDialog shownUser={dialogState.userToWatch} open={dialogState.isOpened}
+                close={() => dispatch({type: 'close'})}/>
         </Container>
     );
 }
