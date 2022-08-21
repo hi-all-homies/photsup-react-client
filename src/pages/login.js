@@ -1,4 +1,7 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 const Login = () => {
     const sx = {

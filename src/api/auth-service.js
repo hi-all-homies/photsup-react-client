@@ -1,8 +1,8 @@
-import { decodeToken } from "react-jwt";
+import jwt_decode from "jwt-decode";
 
 export const AuthService = {
     storeUser:(jwt) => {
-        let decoded = decodeToken(jwt);
+        let decoded = jwt_decode(jwt);
         let user = null;
 
         if (decoded){
