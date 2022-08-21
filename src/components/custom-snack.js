@@ -15,7 +15,7 @@ const CustomSnack = (props) => {
         <Snackbar open={props.open} onClose={handleClose} autoHideDuration={7000}
             anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
             
-            <MuiAlert onClose={handleClose} severity={props.severity} sx={{ width: '100%' }}>
+            <MuiAlert onClose={handleClose} variant="filled" severity={props.severity} sx={{ width: '100%' }}>
                 {props.message}
             </MuiAlert>
         </Snackbar>

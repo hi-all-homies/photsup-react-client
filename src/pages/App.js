@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import './App.css';
 import Footer from '../components/footer';
 import Header from '../components/header';

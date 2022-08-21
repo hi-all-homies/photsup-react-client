@@ -26,5 +26,9 @@ export const PostService = {
 
     deletePost:(url) => {
         return performFetch(url, 'DELETE');
+    },
+
+    addLike:(url) => {
+        return performFetch(url, 'POST');
     }
 }

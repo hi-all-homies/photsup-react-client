@@ -6,10 +6,14 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Snackbar from '@mui/material/Snackbar';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { ColorModeContext } from '../pages/ThemedApp';
+import InvertColorsIcon from '@mui/icons-material/InvertColors';
+import Tooltip from "@mui/material/Tooltip";
 
 const Header = (props) => {
     const [open, setOpen] = useState(false);
+    const colorMode = useContext(ColorModeContext);
 
     const logOut = () => {
         props.logOut();
@@ -29,6 +33,11 @@ const Header = (props) => {
 
                 <Box>
                     { props.user && <Button color="inherit" onClick={() => setOpen(true)}>log out</Button> }
+                    <Tooltip title="change color mode">
+                    <IconButton color='inherit' onClick={colorMode.toggleColorMode} >
+                        <InvertColorsIcon/>
+                    </IconButton>
+                    </Tooltip>
                 </Box>
             </Toolbar>
 
