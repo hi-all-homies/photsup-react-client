@@ -1,4 +1,5 @@
-import { Box, CircularProgress } from "@mui/material";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthService } from "../api/auth-service";

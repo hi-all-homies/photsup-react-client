@@ -1,6 +1,12 @@
-import { PhotoCamera } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
-import { Box } from "@mui/system";
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -65,7 +71,7 @@ const PostDialog = ({open, close, savePost, updPost, updatePost}) => {
             <DialogActions>
                 <IconButton color="primary" onClick={() => imageInput.current.click()}>
                     <input onChange={handleFileInput} ref={imageInput} hidden type="file" accept="image/**" />
-                    <PhotoCamera/>
+                    <PhotoCameraIcon/>
                 </IconButton>
                 {updPost ? 
                 <Button onClick={handleUpdate} disabled={content.length < 3}>
