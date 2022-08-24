@@ -11,17 +11,20 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { red } from '@mui/material/colors';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { PostService } from "../api/post-service";
+import { UserContext } from "../pages/App";
 
 const baseUrl = `${process.env.REACT_APP_BASE_URL}`;
 
-const Post = ({post, user, openPostDialog, deletePost}) => {
+const Post = ({post, openPostDialog, deletePost, openUserDialog}) => {
     const [aPost, setPost] = useState(post);
+    const user = useContext(UserContext);
+
     const [anchorEl, setAnchorEl] = useState(null);
     const openMenu = (event) => setAnchorEl(event.currentTarget);
     const menu = Boolean(anchorEl);
@@ -54,14 +57,18 @@ const Post = ({post, user, openPostDialog, deletePost}) => {
             });
     }
 
+    const showAuthor = () => {
+        openUserDialog(post.author.uniqueKey);
+    }
+
     return (
         <Card variant="outlined" sx={{margin: "1rem auto", maxWidth: "55%"}}>
 
            <CardHeader avatar={
-            <Avatar alt="ava" src={post.author.avatarUrl} sx={{ bgcolor: red[500] }}>
+            <Avatar alt="ava" onClick={showAuthor} src={post.author.avatarUrl} sx={{ bgcolor: red[500], cursor: 'pointer' }}>
                 {post.author.username.charAt(0)}
             </Avatar>}
-            action={user.id === post.author.userId &&
+            action={user.uniqueKey === post.author.uniqueKey &&
                 <IconButton onClick={openMenu}>
                     <MoreVertIcon/>
                 </IconButton>

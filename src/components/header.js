@@ -1,4 +1,3 @@
-import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -10,13 +9,16 @@ import { useContext, useState } from 'react';
 import { ColorModeContext } from '../pages/ThemedApp';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import Tooltip from "@mui/material/Tooltip";
+import { UserContext } from '../pages/App';
+import Avatar from '@mui/material/Avatar';
 
-const Header = (props) => {
+const Header = ({logOut}) => {
     const [open, setOpen] = useState(false);
     const colorMode = useContext(ColorModeContext);
+    const user = useContext(UserContext);
 
-    const logOut = () => {
-        props.logOut();
+    const handleLogOut = () => {
+        logOut();
         setOpen(false);
     }
 
@@ -24,15 +26,15 @@ const Header = (props) => {
         <AppBar position="static">
             <Toolbar>
                 
-                <IconButton color="inherit">
-                    <MenuIcon/>
+                <IconButton>
+                    <Avatar src={`${process.env.PUBLIC_URL}/app-logo.png`} sx={{width: 50, height: 50}} />
                 </IconButton>
                 <Typography component="div" variant="h6" flexGrow={1}>
-                    Phots ups
+                    Phots up
                 </Typography>
 
                 <Box>
-                    { props.user && <Button color="inherit" onClick={() => setOpen(true)}>log out</Button> }
+                    { user && <Button color="inherit" onClick={() => setOpen(true)}>log out</Button> }
                     <Tooltip title="change color mode">
                     <IconButton color='inherit' onClick={colorMode.toggleColorMode} >
                         <InvertColorsIcon/>
@@ -46,7 +48,7 @@ const Header = (props) => {
                 action={
                     <>
                         <Button onClick={() => setOpen(false)} color="inherit" >No</Button>
-                        <Button onClick={logOut} color="error" >Yes</Button>
+                        <Button onClick={handleLogOut} color="error" >Yes</Button>
                     </>
                 }
             />

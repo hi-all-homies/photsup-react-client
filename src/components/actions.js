@@ -6,7 +6,7 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import UserMenu from "./user-menu";
 
 
-const Actions = ({user, openPostDialog, openUserDialog}) => {
+const Actions = ({openPostDialog, openUserDialog}) => {
     
     const open = () => openPostDialog('new');
 
@@ -21,7 +21,7 @@ const Actions = ({user, openPostDialog, openUserDialog}) => {
             </Box>
 
             <Box>
-                <UserMenu user={user} openUserDialog={openUserDialog}/>
+                <UserMenu openUserDialog={openUserDialog}/>
             </Box>
         </Toolbar>
     );

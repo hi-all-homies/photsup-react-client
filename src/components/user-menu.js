@@ -7,14 +7,16 @@ import Typography from "@mui/material/Typography";
 import { deepPurple } from "@mui/material/colors";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EditIcon from '@mui/icons-material/Edit';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import StatusDialog from "./status-dialog";
 import UserService from "../api/user-service";
 import CustomSnack from "./custom-snack";
+import { UserContext } from "../pages/App";
 
 const baseUrl = `${process.env.REACT_APP_BASE_URL}`;
 
-const UserMenu = ({user, openUserDialog}) => {
+const UserMenu = ({openUserDialog}) => {
+    const user = useContext(UserContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [openStatus, setOpenStatus] = useState(false);
     const [snackbar, setSnackbar] = useState(false);

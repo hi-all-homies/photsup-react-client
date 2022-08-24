@@ -1,11 +1,12 @@
 import Container from "@mui/material/Container";
-import { useEffect, useState, useReducer } from "react";
+import { useEffect, useState, useReducer, useContext } from "react";
 import PostList from "../components/post-list";
 import Actions from "../components/actions";
 import { PostService } from "../api/post-service";
 import PostDialog from "../components/post-dialog";
 import UserDialog from "../components/user-dialog";
 import UserService from "../api/user-service";
+import { UserContext } from "./App";
 
 
 const baseUrl = `${process.env.REACT_APP_BASE_URL}`;
@@ -39,7 +40,8 @@ const userDialogReducer = (dialogState, action) => {
     }
 }
 
-const Wall = ({user}) => {
+const Wall = () => {
+    const user = useContext(UserContext);
     const [posts, setPosts] = useState([]);
     const [dialogState, dispatch] = useReducer(userDialogReducer, userDialogInitState);
     const [postDialog, dispatchPostDialog] = useReducer(postDialogReducer, postDialogState);
@@ -63,7 +65,13 @@ const Wall = ({user}) => {
     const savePost = (content, image) => {
         PostService.savePost(`${baseUrl}/posts`, content, image)
             .then(post =>{
-                post = {...post, author: user}
+                post = {
+                    ...post,
+                    author: user,
+                    meLiked: false,
+                    likeCount: 0
+
+                }
                 let array = [post];
                 setPosts(array.concat(posts));
             });
@@ -93,11 +101,11 @@ const Wall = ({user}) => {
 
     return (
         <Container>
-            <Actions user={user} openPostDialog={openPostDialog}
+            <Actions openPostDialog={openPostDialog}
                 openUserDialog={openUserDialog} />
 
-            <PostList posts={posts} user={user} openPostDialog={openPostDialog}
-                deletePost={deletePost} />
+            <PostList posts={posts} openPostDialog={openPostDialog}
+                deletePost={deletePost} openUserDialog={openUserDialog} />
 
             <PostDialog savePost={savePost} updPost={postDialog.postToWatch} updatePost={updatePost}
                 open={postDialog.isOpened} close={() => dispatchPostDialog({type: 'close'})}/>

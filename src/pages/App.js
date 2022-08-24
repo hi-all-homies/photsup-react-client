@@ -6,10 +6,12 @@ import Wall from './wall';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './login';
 import Token from './token';
-import { useReducer } from 'react';
+import React, { useReducer } from 'react';
 import AuthenticatedRoute from '../components/authenticated-route';
 import { AuthService } from '../api/auth-service';
 
+
+export const UserContext = React.createContext({});
 
 const init = (initialState) => {
   return AuthService.getUser();
@@ -35,11 +37,12 @@ const App = () => {
   const logOut = () => dispatch({type: 'logout'});
 
   return (
+    <UserContext.Provider value={user}>
     <Box className='main-box'>
-      <Header user={user} logOut={logOut}/>
+      <Header logOut={logOut}/>
       <Routes>
-        <Route element={ <AuthenticatedRoute user={user} redirectPath="/login"/> }>
-          <Route path="/" element={<Wall user={user}/>} />
+        <Route element={ <AuthenticatedRoute redirectPath="/login"/> }>
+          <Route path="/" element={<Wall/>} />
         </Route>
         <Route path="/login" element={ !user ? <Login/> : <Navigate to="/"/> }/>
         <Route path="/token" element={ !user ? <Token logIn={logIn}/> : <Navigate to="/"/> }/>
@@ -47,6 +50,7 @@ const App = () => {
       </Routes>
       <Footer/>
     </Box>
+    </UserContext.Provider>
   );
 }
 
