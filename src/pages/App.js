@@ -8,31 +8,12 @@ import Login from './login';
 import Token from './token';
 import React, { useReducer } from 'react';
 import AuthenticatedRoute from '../components/authenticated-route';
-import { AuthService } from '../api/auth-service';
-
+import { initUserState, userReducer } from '../reducers/user-reducer';
 
 export const UserContext = React.createContext({});
 
-const init = (initialState) => {
-  return AuthService.getUser();
-}
-
-const reducer = (user, action) => {
-  switch(action.type){
-    case 'login':
-      return AuthService.getUser();
-    case 'logout':{
-      AuthService.deleteUser();
-      return null;
-    }
-    default:
-      return null;
-  }
-}
-
-
 const App = () => {
-  const [user, dispatch] = useReducer(reducer, null, init);
+  const [user, dispatch] = useReducer(userReducer, null, initUserState);
   const logIn = () => dispatch({type: 'login'});
   const logOut = () => dispatch({type: 'logout'});
 
