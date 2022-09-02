@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Snackbar from '@mui/material/Snackbar';
 import { useContext, useState } from 'react';
 import { ColorModeContext } from '../pages/ThemedApp';
@@ -11,6 +10,9 @@ import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import Tooltip from "@mui/material/Tooltip";
 import { UserContext } from '../pages/App';
 import Avatar from '@mui/material/Avatar';
+import { Link as RouterLink } from "react-router-dom";
+import Link from '@mui/material/Link';
+
 
 const Header = ({logOut}) => {
     const [open, setOpen] = useState(false);
@@ -29,9 +31,11 @@ const Header = ({logOut}) => {
                 <IconButton>
                     <Avatar src={`${process.env.PUBLIC_URL}/app-logo.png`} sx={{width: 50, height: 50}} />
                 </IconButton>
-                <Typography component="div" variant="h6" flexGrow={1}>
-                    Phots up
-                </Typography>
+                <Box flexGrow={1}>
+                    <Link to="/" color="inherit" underline="hover" component={RouterLink} variant="button" >
+                        to the wall
+                    </Link>
+                </Box>
 
                 <Box>
                     { user && <Button color="inherit" onClick={() => setOpen(true)}>log out</Button> }

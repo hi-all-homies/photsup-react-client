@@ -1,4 +1,4 @@
-import { performFetch } from "./fetch-utils";
+import { performFetch, postJson } from "./fetch-utils";
 
 export const PostService = {
     findPosts: (url) => {
@@ -30,5 +30,15 @@ export const PostService = {
 
     addLike:(url) => {
         return performFetch(url, 'POST');
+    },
+
+    findById:(url) => {
+        return performFetch(url, 'GET')
+            .then(resp => resp.json());
+    },
+
+    addComment:(url, body) => {
+        return postJson(url, 'POST', body)
+            .then(resp => resp.json());
     }
 }

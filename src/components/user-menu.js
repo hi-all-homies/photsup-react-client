@@ -8,15 +8,17 @@ import { deepPurple } from "@mui/material/colors";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import { useContext, useState } from "react";
-import StatusDialog from "./status-dialog";
+import StatusDialog from "./dialogs/status-dialog";
 import UserService from "../api/user-service";
 import CustomSnack from "./custom-snack";
 import { UserContext } from "../pages/App";
+import { FunctionsContext } from "../pages/Home";
 
 const baseUrl = `${process.env.REACT_APP_BASE_URL}`;
 
-const UserMenu = ({openUserDialog}) => {
+const UserMenu = () => {
     const user = useContext(UserContext);
+    const functions = useContext(FunctionsContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const [openStatus, setOpenStatus] = useState(false);
     const [snackbar, setSnackbar] = useState(false);
@@ -25,7 +27,7 @@ const UserMenu = ({openUserDialog}) => {
     const openMenu = (event) => setAnchorEl(event.currentTarget);
 
     const openProfile = () => {
-        openUserDialog(user.uniqueKey);
+        functions.openUserDialog(user.uniqueKey);
         setAnchorEl(null);
     }
 

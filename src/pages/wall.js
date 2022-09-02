@@ -1,55 +1,44 @@
 import Container from "@mui/material/Container";
 import { useEffect, useState, useReducer, useContext } from "react";
-import PostList from "../components/post-list";
+import PostList from "../components/post/post-list";
 import Actions from "../components/actions";
 import { PostService } from "../api/post-service";
-import PostDialog from "../components/post-dialog";
-import UserDialog from "../components/user-dialog";
-import UserService from "../api/user-service";
+import PostDialog from "../components/dialogs/post-dialog";
 import { UserContext } from "./App";
-import { WebSocketService } from "../api/websocket-service";
-import { notificationInitState, notificationReducer } from "../reducers/notification-reducer";
 import { postDialogReducer, postDialogState } from "../reducers/post-dialog-reducer";
-import { userDialogInitState, userDialogReducer } from "../reducers/user-dialog-reducer";
-import CustomSnack from "../components/custom-snack";
+
 
 const baseUrl = `${process.env.REACT_APP_BASE_URL}`;
-const socketUrl = `${process.env.REACT_APP_SOCKET}`;
 
 const Wall = () => {
     const user = useContext(UserContext);
     const [posts, setPosts] = useState([]);
-    const [dialogState, dispatch] = useReducer(userDialogReducer, userDialogInitState);
     const [postDialog, dispatchPostDialog] = useReducer(postDialogReducer, postDialogState);
 
-    const [notification, dispatchNotification] =
-        useReducer(notificationReducer, notificationInitState);
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
-        PostService.findPosts(`${baseUrl}/posts?page=0`)
-            .then(posts => setPosts(posts));
-    },[])
+        const handleScrollEvent = () => {
+            const top = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight;
+            const clientHeight = document.documentElement.clientHeight;
 
-    
-    const handleLikeNotification = (message) => {
-        let payload = `${message.liker} has just liked one of your posts`;
-        dispatchNotification({type: 'open', payload: payload});
-    }
-
-    useEffect(() => {
-        WebSocketService.startListen(`${socketUrl}/notify`);
-        WebSocketService.subscribe(handleLikeNotification);
-        return () => {
-            WebSocketService.unsubscribe(handleLikeNotification);
-            WebSocketService.stopListen();
+            const result = height - (top + clientHeight);
+            if (result === 0)
+                setPage(page+1);
         };
-    },[])
+        window.addEventListener('scroll', handleScrollEvent);
 
+        PostService.findPosts(`${baseUrl}/posts?page=${page}`)
+            .then(newPosts => {
+                if (newPosts.length === 0)
+                    window.removeEventListener('scroll', handleScrollEvent);
+                setPosts(p => p.concat(newPosts));
+            });
 
-    const openUserDialog = (uniqueKey) => {
-        UserService.getUser(`${baseUrl}/users/${uniqueKey}`)
-            .then(u => dispatch({type: 'open', payload: u}));
-    };
+        return () => window.removeEventListener('scroll', handleScrollEvent);
+    },[page])
+
 
     const openPostDialog = (type, postToWatch) => {
         dispatchPostDialog({type: type, payload: postToWatch});
@@ -95,20 +84,14 @@ const Wall = () => {
 
     return (
         <Container>
-            <Actions openPostDialog={openPostDialog}
-                openUserDialog={openUserDialog} />
+            <Actions openPostDialog={openPostDialog}/>
 
             <PostList posts={posts} openPostDialog={openPostDialog}
-                deletePost={deletePost} openUserDialog={openUserDialog} />
+                deletePost={deletePost}/>
 
             <PostDialog savePost={savePost} updPost={postDialog.postToWatch} updatePost={updatePost}
                 open={postDialog.isOpened} close={() => dispatchPostDialog({type: 'close'})}/>
-            
-            <UserDialog shownUser={dialogState.userToWatch} open={dialogState.isOpened}
-                close={() => dispatch({type: 'close'})}/>
 
-            <CustomSnack open={notification.isOpened} message={notification.message}
-                closeSnack={() => dispatchNotification({type: 'close'})} severity="info" />
         </Container>
     );
 }
